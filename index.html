@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>버튜버 키우기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3fb; --card:#ffffff; --ink:#29243d; --sub:#7a7490; --line:#ebe7f5;
+  --violet:#8b6cff; --pink:#ff7eb6; --mint:#3cc9a7; --red:#ff6b81; --gold:#f5b942;
+  --outfit:#b9a6ff; --outfit2:#9c86f5; --bow:#ff7eb6; --collar:#ffffff;
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 10% 0%,#efe8ff 0,transparent 40%),radial-gradient(circle at 100% 100%,#ffe9f3 0,transparent 40%)}
+button{font-family:inherit;cursor:pointer;border:none}
+.wrap{max-width:1180px;margin:0 auto;padding:18px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.logo{font-family:'Jua',sans-serif;font-size:28px;color:var(--violet);letter-spacing:.5px}
+.logo span{color:var(--pink)}
+.hdr-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px}
+.pill b{color:var(--violet)}
+.ghost{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--sub);font-weight:500}
+.ghost:hover{color:var(--ink);border-color:#d6cff0}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--line);box-shadow:0 6px 24px -14px rgba(80,60,160,.25)}
+.pad{padding:16px}
+h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+h3 small{font-weight:500;color:var(--sub);font-size:12px;margin-left:auto}
+
+/* stage */
+.stage{position:relative;aspect-ratio:16/10;border-radius:var(--r);overflow:hidden;
+  background:linear-gradient(180deg,#e9e1ff 0%,#fde7f1 70%,#f7d6e8 100%)}
+.stage .win{position:absolute;left:6%;top:9%;width:26%;height:38%;border-radius:12px;background:linear-gradient(180deg,#5b4fa8,#9c7fe0);border:6px solid #fff;box-shadow:0 4px 0 #e6dcf7}
+.stage .win i{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;opacity:.85}
+.stage .shelf{position:absolute;right:6%;top:14%;width:22%;height:8px;border-radius:4px;background:#fff;opacity:.8}
+.stage .plant{position:absolute;right:10%;top:5%;font-size:26px}
+.stage .desk{position:absolute;left:0;right:0;bottom:0;height:14%;background:#fff;opacity:.55}
+.stage.night{background:linear-gradient(180deg,#2d2650 0%,#5a4785 70%,#7a5c9a 100%)}
+#vt{position:absolute;left:50%;bottom:-2%;height:96%;transform:translateX(-58%)}
+.bob{animation:bob 3.2s ease-in-out infinite;transform-origin:150px 340px}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-.6deg)}}
+.blink{animation:blink 4.5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.exp{display:none}
+svg[data-exp="normal"] .e-normal, svg[data-exp="happy"] .e-happy, svg[data-exp="tired"] .e-tired, svg[data-exp="sad"] .e-sad{display:inline}
+.m{display:none}
+svg[data-mouth="smile"] .m-smile, svg[data-mouth="flat"] .m-flat, svg[data-mouth="frown"] .m-frown{display:inline}
+svg[data-mouth="talk"] .m-smile{display:inline;animation:talkA .32s steps(1) infinite}
+svg[data-mouth="talk"] .m-open{display:inline;animation:talkB .32s steps(1) infinite}
+@keyframes talkA{0%{opacity:1}50%{opacity:0}}
+@keyframes talkB{0%{opacity:0}50%{opacity:1}}
+.live{position:absolute;left:14px;top:14px;display:flex;gap:6px;z-index:3}
+.badge{font-size:12px;font-weight:900;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.85);color:var(--sub)}
+.badge.on{background:#ff4d6d;color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.7}}
+.nameplate{position:absolute;left:14px;bottom:14px;z-index:3;background:rgba(255,255,255,.92);border-radius:12px;padding:8px 14px;box-shadow:0 4px 14px -6px rgba(0,0,0,.2)}
+.nameplate .n{font-family:'Jua';font-size:20px;color:var(--violet)}
+.nameplate .s{font-size:12px;color:var(--sub);font-weight:500}
+.mood{position:absolute;right:14px;top:14px;z-index:3;background:rgba(255,255,255,.88);border-radius:10px;padding:5px 10px;font-size:13px;font-weight:700}
+.chat{position:absolute;right:12px;bottom:12px;top:52px;width:38%;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;z-index:3;pointer-events:none;overflow:hidden;
+  mask-image:linear-gradient(180deg,transparent 0,#000 30%)}
+.msg{background:rgba(255,255,255,.9);border-radius:10px;padding:5px 9px;font-size:12.5px;animation:pop .25s ease-out;line-height:1.35;word-break:keep-all}
+.msg b{color:var(--violet);font-weight:700;margin-right:4px}
+.msg.don{background:linear-gradient(90deg,#fff3c4,#ffe0ef);border:1px solid #f5d27a}
+.msg.don b{color:#c9861a}
+@keyframes pop{from{transform:translateY(8px);opacity:0}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.stat{padding:14px 16px}
+.stat .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);font-weight:500;margin-bottom:8px}
+.stat .lbl b{color:var(--ink);font-size:15px}
+.bar{height:10px;border-radius:99px;background:#f0edf7;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.big{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.big small{font-size:12px;color:var(--sub);font-weight:500;margin-left:4px}
+.skills{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sk .lbl{margin-bottom:6px}
+.bar.thin{height:7px}
+
+/* actions */
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.act{background:#faf8ff;border:1.5px solid var(--line);border-radius:14px;padding:12px;text-align:left;transition:.15s;position:relative}
+.act:hover:not(:disabled){border-color:var(--violet);background:#f4f0ff;transform:translateY(-1px)}
+.act:disabled{opacity:.45;cursor:not-allowed}
+.act .t{font-weight:700;font-size:15px;display:flex;align-items:center;gap:6px}
+.act .d{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.4}
+.act.stream{background:linear-gradient(135deg,#f6f1ff,#fff0f7)}
+.act .lock{position:absolute;right:10px;top:10px;font-size:11px;color:var(--sub)}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{padding:7px 14px;border-radius:99px;background:#f4f1fb;color:var(--sub);font-weight:700;font-size:13px}
+.tab.on{background:var(--violet);color:#fff}
+.shop{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.item .ic{font-size:24px;width:34px;text-align:center}
+.item .info{flex:1;min-width:0}
+.item .nm{font-weight:700;font-size:14px}
+.item .ds{font-size:12px;color:var(--sub)}
+.buy{background:var(--violet);color:#fff;font-weight:700;font-size:13px;padding:7px 12px;border-radius:10px;white-space:nowrap}
+.buy:disabled{background:#d9d3ea}
+.buy.owned{background:#e9fbf5;color:var(--mint)}
+.log{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px}
+.log div{font-size:13px;padding:8px 10px;background:#faf9fd;border-radius:10px;line-height:1.45}
+.log div span{color:var(--sub);font-size:11px;margin-right:6px;font-weight:700}
+.col{display:flex;flex-direction:column;gap:16px}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(40,30,70,.42);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
+.ov.on{display:flex}
+.modal{background:#fff;border-radius:22px;max-width:430px;width:100%;padding:26px 24px 22px;text-align:center;animation:mpop .25s ease-out;box-shadow:0 20px 60px -20px rgba(60,30,140,.5)}
+@keyframes mpop{from{transform:scale(.92);opacity:0}}
+.modal .em{font-size:46px;line-height:1}
+.modal h2{font-size:20px;margin:10px 0 8px}
+.modal p{color:#4c4663;font-size:14.5px;line-height:1.65;white-space:pre-line;word-break:keep-all}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:14px}
+.chip{font-size:13px;font-weight:700;padding:5px 10px;border-radius:99px}
+.chip.up{background:#e7faf3;color:#1f9f80}
+.chip.dn{background:#ffecef;color:#e2445e}
+.btns{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+.btn{background:var(--violet);color:#fff;font-weight:700;font-size:15px;padding:12px;border-radius:12px}
+.btn:hover{filter:brightness(1.07)}
+.btn.alt{background:#f2eefc;color:var(--violet)}
+.modal input{width:100%;margin-top:14px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:16px;font-family:inherit;text-align:center}
+.modal input:focus{outline:none;border-color:var(--violet)}
+.dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin-top:14px;max-height:280px;overflow:auto}
+.dex div{aspect-ratio:1;border-radius:10px;background:#f3f0fa;display:flex;align-items:center;justify-content:center;font-size:20px}
+.dex div.no{filter:grayscale(1);opacity:.25}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:500;z-index:60;opacity:0;transition:.3s;pointer-events:none}
+.toast.on{opacity:1}
+svg[data-mouth="open"] .m-open{display:inline}
+.camBox{position:absolute;left:14px;top:50px;width:24%;z-index:4;background:rgba(255,255,255,.92);border-radius:12px;padding:5px;box-shadow:0 6px 18px -8px rgba(0,0,0,.3)}
+.camBox video{width:100%;display:block;border-radius:9px;transform:scaleX(-1);background:#222;aspect-ratio:4/3;object-fit:cover}
+.camHud{font-size:11px;font-weight:700;color:var(--sub);padding:4px 2px 1px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mission{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:5;background:#fff;border-radius:14px;padding:9px 16px 10px;min-width:46%;text-align:center;box-shadow:0 8px 24px -10px rgba(80,40,160,.45);border:2px solid var(--violet);display:none}
+.mission .k{font-size:11px;font-weight:900;color:var(--violet);letter-spacing:.3px}
+.mission .q{font-size:16px;font-weight:900;margin:2px 0 6px}
+.mission .tb{height:6px;border-radius:9px;background:#efeaff;overflow:hidden}
+.mission .tb i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--violet))}
+.mission .hb{height:4px;border-radius:9px;background:#e7faf3;overflow:hidden;margin-top:4px}
+.mission .hb i{display:block;height:100%;background:var(--mint)}
+.mission.ok{border-color:var(--mint);background:#effcf7}
+.mission.fail{border-color:#ccc;background:#f6f6f8}
+.msg.sys{background:#2a2540;color:#fff}
+.camOn{background:var(--violet)!important;color:#fff!important;border-color:var(--violet)!important}
+.hint{font-size:12px;color:var(--sub);margin-top:10px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">버튜버 <span>키우기</span> ✨</div>
+    <div class="hdr-right">
+      <div class="pill">📅 <b id="day">1</b>일차 <span style="color:var(--sub);font-weight:500">/ 100</span></div>
+      <button class="ghost" id="camBtn">📷 카메라 모드</button>
+      <button class="ghost" id="dexBtn">📖 이벤트 도감 <b id="dexCnt">0</b></button>
+      <button class="ghost" id="resetBtn">↺ 처음부터</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div>
+      <div class="card stage" id="stage">
+        <div class="win" id="win"></div>
+        <div class="shelf"></div><div class="plant">🪴</div>
+        <div class="desk"></div>
+        <div class="live"><div class="badge" id="liveB">OFFLINE</div><div class="badge" id="viewB" style="display:none">👀 0</div></div>
+        <div class="mood" id="mood">😊 좋음</div>
+        <div class="camBox" id="camBox" style="display:none"><video id="cam" playsinline muted></video><div class="camHud" id="camHud">카메라 준비 중…</div></div>
+        <div class="mission" id="mission"><div class="k" id="misK">📣 시청자 미션</div><div class="q" id="misQ"></div><div class="tb"><i id="misT"></i></div><div class="hb"><i id="misH"></i></div></div>
+        <svg id="vt" viewBox="0 0 300 340" data-exp="happy" data-mouth="smile" aria-label="버튜버 캐릭터">
+          <defs>
+            <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdb9ff"/><stop offset="1" stop-color="#ffb6d9"/></linearGradient>
+            <linearGradient id="hairF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c2acff"/><stop offset="1" stop-color="#e9b2ff"/></linearGradient>
+            <linearGradient id="iris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b3fd6"/><stop offset=".6" stop-color="#a26bff"/><stop offset="1" stop-color="#ff8fc8"/></linearGradient>
+          </defs>
+          <g class="bob"><g id="rig">
+            <!-- back hair -->
+            <path d="M62 165 Q52 62 150 52 Q248 62 238 165 L252 300 Q226 322 196 312 L150 318 L104 312 Q74 322 48 300 Z" fill="url(#hair)"/>
+            <!-- body -->
+            <path d="M62 342 Q66 272 150 262 Q234 272 238 342 Z" fill="var(--outfit)"/>
+            <path d="M90 342 Q96 300 112 282 L120 342Z M210 342 Q204 300 188 282 L180 342Z" fill="var(--outfit2)" opacity=".7"/>
+            <rect x="134" y="226" width="32" height="44" rx="12" fill="#ffe1d3"/>
+            <path d="M118 266 L150 300 L182 266 Q150 276 118 266Z" fill="var(--collar)"/>
+            <g fill="var(--bow)"><path d="M150 296 L128 284 L130 308Z"/><path d="M150 296 L172 284 L170 308Z"/><circle cx="150" cy="296" r="6"/></g>
+            <!-- headphone band + cat ears -->
+            <path d="M84 98 L90 40 L130 76Z" fill="#fff" stroke="#e8def9" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M216 98 L210 40 L170 76Z" fill="#fff" stroke="#e8def9" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M94 86 L97 56 L118 76Z M206 86 L203 56 L182 76Z" fill="#ffc3df"/>
+            <!-- face -->
+            <path d="M82 150 Q82 232 150 246 Q218 232 218 150 Q218 92 150 92 Q82 92 82 150Z" fill="#fff1e9"/>
+            <!-- side locks -->
+            <path d="M84 132 Q66 200 82 262 Q98 218 102 156Z" fill="url(#hairF)"/>
+            <path d="M216 132 Q234 200 218 262 Q202 218 198 156Z" fill="url(#hairF)"/>
+            <!-- bangs -->
+            <path d="M80 152 Q74 80 150 72 Q226 80 220 152 Q206 118 188 108 Q184 132 168 142 Q162 114 150 104 Q140 128 120 140 Q118 116 112 108 Q92 120 80 152Z" fill="url(#hairF)"/>
+            <path d="M150 104 Q146 92 152 80" stroke="#fff" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"/>
+            <!-- headphone cups -->
+            <path d="M80 122 Q150 34 220 122" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" opacity=".95"/>
+            <rect x="64" y="138" width="26" height="40" rx="12" fill="#fff" stroke="#e8def9" stroke-width="3"/>
+            <rect x="210" y="138" width="26" height="40" rx="12" fill="#fff" stroke="#e8def9" stroke-width="3"/>
+            <circle cx="77" cy="158" r="5" fill="var(--bow)"/><circle cx="223" cy="158" r="5" fill="var(--bow)"/>
+            <!-- brows -->
+            <g class="exp e-normal e-happy e-tired" stroke="#8d74d9" stroke-width="3" stroke-linecap="round" fill="none">
+              <path d="M108 146 Q120 140 132 145"/><path d="M168 145 Q180 140 192 146"/></g>
+            <g class="exp e-sad" stroke="#8d74d9" stroke-width="3" stroke-linecap="round" fill="none">
+              <path d="M108 142 Q120 144 132 150"/><path d="M168 150 Q180 144 192 142"/></g>
+            <!-- eyes open -->
+            <g class="exp e-normal e-sad">
+              <g class="blink"><ellipse cx="121" cy="174" rx="14" ry="18" fill="#fff"/><ellipse cx="121" cy="176" rx="11.5" ry="15.5" fill="url(#iris)"/><ellipse cx="121" cy="178" rx="5.5" ry="7.5" fill="#2b1d5c"/><circle cx="116" cy="169" r="4.5" fill="#fff"/><circle cx="126" cy="183" r="2" fill="#fff"/><path d="M104 164 Q121 150 138 164" stroke="#3b2a6e" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+              <g class="blink"><ellipse cx="179" cy="174" rx="14" ry="18" fill="#fff"/><ellipse cx="179" cy="176" rx="11.5" ry="15.5" fill="url(#iris)"/><ellipse cx="179" cy="178" rx="5.5" ry="7.5" fill="#2b1d5c"/><circle cx="174" cy="169" r="4.5" fill="#fff"/><circle cx="184" cy="183" r="2" fill="#fff"/><path d="M162 164 Q179 150 196 164" stroke="#3b2a6e" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+            </g>
+            <!-- happy eyes -->
+            <g class="exp e-happy" stroke="#3b2a6e" stroke-width="4.5" fill="none" stroke-linecap="round">
+              <path d="M106 178 Q121 160 136 178"/><path d="M164 178 Q179 160 194 178"/></g>
+            <!-- tired eyes -->
+            <g class="exp e-tired">
+              <ellipse cx="121" cy="178" rx="12" ry="9" fill="url(#iris)"/><ellipse cx="179" cy="178" rx="12" ry="9" fill="url(#iris)"/>
+              <circle cx="121" cy="180" r="4" fill="#2b1d5c"/><circle cx="179" cy="180" r="4" fill="#2b1d5c"/>
+              <path d="M104 174 L138 174 M162 174 L196 174" stroke="#3b2a6e" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M110 194 Q121 198 132 194 M168 194 Q179 198 190 194" stroke="#c6b2e8" stroke-width="2" fill="none"/>
+            </g>
+            <!-- tear -->
+            <path class="exp e-sad" d="M136 190 Q132 200 136 204 Q140 200 136 190Z" fill="#8fd3ff"/>
+            <!-- blush -->
+            <ellipse cx="104" cy="200" rx="11" ry="6" fill="#ff9ec7" opacity=".45"/>
+            <ellipse cx="196" cy="200" rx="11" ry="6" fill="#ff9ec7" opacity=".45"/>
+            <!-- mouth -->
+            <path class="m m-smile" d="M140 208 Q150 218 160 208" stroke="#c8506f" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path class="m m-open" d="M141 207 Q150 207 159 207 Q158 222 150 222 Q142 222 141 207Z" fill="#c8506f"/>
+            <path class="m m-flat" d="M142 212 L158 212" stroke="#c8506f" stroke-width="3" stroke-linecap="round"/>
+            <path class="m m-frown" d="M141 215 Q150 207 159 215" stroke="#c8506f" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- mic -->
+            <path d="M232 178 Q250 214 196 222" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <circle cx="194" cy="222" r="6" fill="var(--bow)"/>
+          </g></g>
+        </svg>
+        <div class="chat" id="chat"></div>
+        <div class="nameplate"><div class="n" id="vname">루미</div><div class="s" id="vsub">구독자 0명</div></div>
+      </div>
+
+      <div class="stats">
+        <div class="card stat"><div class="lbl">❤️ 체력 <b id="hpT">100</b></div><div class="bar"><i id="hpB" style="background:linear-gradient(90deg,#ff8fa3,#ff6b81)"></i></div></div>
+        <div class="card stat"><div class="lbl">🧠 정신력 <b id="mnT">100</b></div><div class="bar"><i id="mnB" style="background:linear-gradient(90deg,#b49cff,#8b6cff)"></i></div></div>
+        <div class="card stat"><div class="lbl">💰 돈</div><div class="big" id="moneyT">₩100,000</div></div>
+        <div class="card stat"><div class="lbl">⭐ 구독자</div><div class="big" id="subsT">0<small>명</small></div></div>
+        <div class="card stat skills">
+          <div class="sk"><div class="lbl">🎮 게임 <b id="skG">5</b></div><div class="bar thin"><i id="skGB" style="background:#5cc8ff"></i></div></div>
+          <div class="sk"><div class="lbl">🎤 노래 <b id="skS">5</b></div><div class="bar thin"><i id="skSB" style="background:#ff8fc4"></i></div></div>
+          <div class="sk"><div class="lbl">💬 토크 <b id="skT">5</b></div><div class="bar thin"><i id="skTB" style="background:#ffc04d"></i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card pad">
+        <div class="tabs"><button class="tab on" data-tab="act">오늘 할 일</button><button class="tab" data-tab="shop">상점</button></div>
+        <div id="tab-act">
+          <div class="acts">
+            <button class="act stream" data-a="game"><div class="t">🎮 게임 방송</div><div class="d">체력 -8 · 정신력 -10<br>게임 실력이 중요해요</div></button>
+            <button class="act stream" data-a="sing"><div class="t">🎤 노래 방송</div><div class="d">체력 -12 · 정신력 -6<br>노래 실력이 중요해요</div></button>
+            <button class="act stream" data-a="talk"><div class="t">💬 잡담 방송</div><div class="d">체력 -5 · 정신력 -12<br>토크 실력이 중요해요</div></button>
+            <button class="act stream" data-a="collab"><div class="t">🤝 합방</div><div class="d">체력 -10 · 정신력 -14<br>시청자 1.8배!</div><div class="lock" id="collabLock">🔒 구독자 300</div></button>
+            <button class="act" data-a="rest"><div class="t">😴 휴식</div><div class="d">체력 +35 · 정신력 +15</div></button>
+            <button class="act" data-a="practice"><div class="t">📚 연습</div><div class="d">실력 +3~5<br>체력 -6 · 정신력 -4</div></button>
+            <button class="act" data-a="work"><div class="t">💼 아르바이트</div><div class="d">돈 +6~9만<br>체력 -15 · 정신력 -10</div></button>
+            <button class="act" data-a="outing"><div class="t">🌸 외출</div><div class="d">정신력 +25 · 돈 -3만<br>가끔 좋은 일이 생겨요</div></button>
+          </div>
+          <div class="hint">💡 매주(7일마다) 생활비 7만원이 나가요. 체력·정신력·돈·구독자가 특정 수준에 도달하면 특별 이벤트가 열려요.<br>📷 <b>카메라 모드</b>를 켜면 내 표정·고개·입 움직임을 캐릭터가 따라 하고, 방송 중 시청자 미션(웃기, 브이, 따봉, 윙크 등)이 나와요. 영상은 기기 안에서만 처리돼요.</div>
+        </div>
+        <div id="tab-shop" style="display:none"><div class="shop" id="shop"></div></div>
+      </div>
+      <div class="card pad">
+        <h3>📝 활동 기록 <small id="logCnt"></small></h3>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const R=(a,b)=>Math.random()*(b-a)+a;
+const RI=(a,b)=>Math.floor(R(a,b+1));
+const chance=p=>Math.random()<p;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=n=>Math.round(n).toLocaleString('ko-KR');
+const won=n=>(n<0?'-₩':'₩')+fmt(Math.abs(n));
+const VT_FRIENDS=['모모루나','하나비 린','시로네코','카게츠 유이','별빛 세라','츠키노 하루','코하쿠 미오'];
+const NICKS=['별사탕','고양이집사','새벽감성','치즈냥','구름빵','민트초코','꿀벌','딸기우유','펭귄','야식왕','솜사탕','무지개','감자칩','달토끼'];
+
+let S=null;
+const SAVE_KEY='vtuber-raise-v1';
+function newState(name){return{name,day:1,hp:100,mental:100,money:100000,subs:0,skill:{game:5,sing:5,talk:5},
+  equip:{},outfit:'basic',owned:{basic:true},flags:{},burnouts:0,buff:1,seen:{},log:[],totalDon:0,streams:0,over:false}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const t=localStorage.getItem(SAVE_KEY);return t?JSON.parse(t):null}catch(e){return null}}
+
+/* ---------------- outfits / shop ---------------- */
+const OUTFITS={
+  basic:{name:'기본 후드',ic:'💜',price:0,c:['#b9a6ff','#9c86f5','#ff7eb6','#ffffff']},
+  idol:{name:'아이돌 의상',ic:'🎀',price:150000,c:['#ff9cc9','#ff74b0','#ffd34d','#ffffff']},
+  sailor:{name:'세일러복',ic:'⚓',price:120000,c:['#ffffff','#dfe6ff','#e84a6a','#3b4a8c']},
+  gothic:{name:'고딕 드레스',ic:'🖤',price:200000,c:['#3a3046','#2a2234','#c23b6b','#f1e9ff']},
+  mint:{name:'민트 원피스',ic:'🌿',price:130000,c:['#9ee6cf','#6fd1b4','#ff9f7a','#ffffff']},
+};
+const EQUIP={
+  mic:{name:'고급 마이크',ic:'🎙️',price:200000,ds:'노래 방송 시청자 +25%, 마이크 고장 방지'},
+  pc:{name:'게이밍 PC',ic:'🖥️',price:350000,ds:'게임 방송 시청자 +25%, 렉 사고 감소'},
+  light:{name:'방송 조명',ic:'💡',price:120000,ds:'잡담·합방 시청자 +20%'},
+  track:{name:'트래킹 업그레이드',ic:'📷',price:250000,ds:'모든 방송 시청자 +10%'},
+  chair:{name:'게이밍 의자',ic:'🪑',price:150000,ds:'방송 체력 소모 -30%'},
+};
+const CONSUME={
+  drink:{name:'에너지 드링크',ic:'🥤',price:15000,ds:'체력 +25',fx:{hp:25}},
+  chicken:{name:'치킨 배달',ic:'🍗',price:22000,ds:'정신력 +20',fx:{mental:20}},
+  cake:{name:'딸기 케이크',ic:'🍰',price:35000,ds:'체력 +15 · 정신력 +15',fx:{hp:15,mental:15}},
+  trip:{name:'온천 여행 (2일)',ic:'♨️',price:200000,ds:'체력·정신력 완전 회복',fx:{hp:100,mental:100},days:2},
+};
+
+/* ---------------- streams ---------------- */
+const STREAMS={
+  game:{name:'게임 방송',emoji:'🎮',skill:'game',hp:8,mental:10,mul:1},
+  sing:{name:'노래 방송',emoji:'🎤',skill:'sing',hp:12,mental:6,mul:1.1},
+  talk:{name:'잡담 방송',emoji:'💬',skill:'talk',hp:5,mental:12,mul:.9},
+  collab:{name:'합방',emoji:'🤝',skill:'talk',hp:10,mental:14,mul:1.8},
+};
+const CHATS={
+  all:['ㅋㅋㅋㅋㅋ','귀여워!!','오늘도 출석 ✋','첫채팅이에요!','목소리 너무 좋다','♡♡♡','왔다 왔다','킹받네ㅋㅋㅋ','오늘 컨디션 좋아 보여요','방송 켜줘서 고마워','하이하이~','머리 색 예뻐요'],
+  game:['아 거기 아니야ㅋㅋ','보스 패턴 봐봐','GG','에임 무엇','나이스!!!','왼쪽 왼쪽!!','이걸 피하네ㄷㄷ'],
+  sing:['고음 미쳤다','앵콜!! 앵콜!!','소름 돋았어요','이 노래 최애곡','음색 장인','한 곡만 더 ㅠㅠ'],
+  talk:['TMI 더 해줘ㅋㅋ','완전 공감 ㅠㅠ','오늘 뭐 먹었어?','썰 풀어줘요','ㄹㅇ 웃기다','그래서 어떻게 됐어?'],
+  collab:['케미 미쳤다','둘이 너무 웃겨ㅋㅋ','합방 자주 해줘요','이 조합 찬성!!','둘 다 귀여워'],
+};
+
+/* ---------------- events ---------------- */
+// run(s,ctx) -> {text, fx} or {text, choices:[{label, go(s)->{text,fx}}]}
+const SE=[ // broadcast events
+ {id:'bigdonor',e:'💎',t:'큰손 후원자 등장!',w:2,run:s=>({text:`"항상 응원해요"라는 메시지와 함께 엄청난 후원이 들어왔어요!\n${s.name}은(는) 깜짝 놀라 말을 더듬었어요.`,fx:{money:RI(30000,80000)+s.subs*3,mental:10}})},
+ {id:'hater',e:'😠',t:'악플러 등장',w:2,run:s=>({text:'채팅창에 계속 시비를 거는 사람이 나타났어요. 어떻게 할까요?',choices:[
+   {label:'🙈 못 본 척 넘어간다',go:s=>({text:'신경 쓰지 않으려 했지만 조금 마음에 걸려요.',fx:{mental:-6}})},
+   {label:'💬 정중하게 대응한다',go:s=>chance(.5)?{text:'침착한 대응에 시청자들이 감탄했어요! 클립이 퍼졌어요.',fx:{subs:RI(10,40)+s.subs*.03,talk:2}}:{text:'말싸움이 길어지면서 지쳐버렸어요…',fx:{mental:-16}}},
+   {label:'🔨 바로 밴한다',go:s=>({text:'깔끔하게 밴! 채팅창이 평화로워졌어요.',fx:{mental:3}})}]})},
+ {id:'viral',e:'🚀',t:'클립이 알고리즘을 탔다!',w:1.2,run:s=>({text:'방송 중 웃긴 장면이 쇼츠로 퍼져서 조회수가 폭발했어요!',fx:{subs:RI(80,250)+s.subs*.12,mental:8}})},
+ {id:'micbreak',e:'🔇',t:'마이크 고장',w:1.5,when:s=>!s.equip.mic,run:s=>({text:'갑자기 마이크에서 소리가 안 나와요! 10분 동안 무음 방송을 했어요…',fx:{mental:-10,subs:-RI(0,8)}})},
+ {id:'netdown',e:'📡',t:'인터넷 끊김',w:1.5,when:s=>!s.equip.pc||chance(.3),run:s=>({text:'한창 재밌을 때 인터넷이 끊겨버렸어요. 다시 켰더니 시청자가 절반으로…',fx:{mental:-14,subs:-RI(2,15)}})},
+ {id:'cat',e:'🐈',t:'고양이 난입',run:s=>({text:'키보드 위로 고양이가 올라와 화면을 가렸어요.\n채팅창이 "고양이 더 보여줘"로 도배됐어요!',fx:{subs:RI(15,50),mental:10}})},
+ {id:'highnote',e:'🎶',t:'전설의 고음 성공',when:(s,c)=>c.type==='sing',run:s=>({text:'연습해 온 고음을 완벽하게 소화했어요! 시청자들이 소름 돋았대요.',fx:{subs:RI(30,90)+s.skill.sing,sing:2}})},
+ {id:'voicecrack',e:'😵',t:'음이탈 사고',when:(s,c)=>c.type==='sing',run:s=>chance(.5)?{text:'고음에서 삑사리가 났는데… 너무 귀엽다며 밈이 됐어요!',fx:{subs:RI(40,120),mental:-3}}:{text:'고음에서 목소리가 갈라졌어요. 부끄러워서 얼굴이 빨개졌어요.',fx:{mental:-12}}},
+ {id:'record',e:'🏆',t:'게임 신기록 달성',when:(s,c)=>c.type==='game',run:s=>({text:'스피드런 개인 신기록! 채팅창이 축제가 됐어요.',fx:{subs:RI(30,80)+s.skill.game,game:2,mental:8}})},
+ {id:'bossfail',e:'💀',t:'보스전 30연패',when:(s,c)=>c.type==='game',run:s=>({text:'같은 보스에게 30번이나 졌어요… 불쌍하다며 위로 후원이 쏟아졌어요.',fx:{mental:-14,money:RI(15000,45000),game:1}})},
+ {id:'horror',e:'👻',t:'공포게임 비명 클립',when:(s,c)=>c.type==='game',run:s=>({text:'점프스케어에 엄청난 비명을 질렀어요. "역대급 리액션" 클립이 생겼어요!',fx:{subs:RI(40,110),hp:-4}})},
+ {id:'famous',e:'🌟',t:'유명 버튜버가 방문!',w:.8,when:s=>s.subs>=200,run:s=>{const f=pick(VT_FRIENDS);return{text:`인기 버튜버 '${f}'님이 채팅을 남기고 갔어요!\n${f}님의 팬들이 우르르 몰려왔어요.`,fx:{subs:RI(60,200)+s.subs*.05,mental:12}}}},
+ {id:'raid',e:'🎉',t:'레이드를 받았다',when:s=>s.subs>=100,run:s=>({text:`방송을 끝낸 '${pick(VT_FRIENDS)}'님이 시청자들을 보내줬어요!`,fx:{subs:RI(25,90),mental:6}})},
+ {id:'tracking',e:'🫠',t:'트래킹 오류',w:1.2,when:s=>!s.equip.track,run:s=>chance(.5)?{text:'얼굴 트래킹이 꼬여서 목이 360도 돌아갔어요! 시청자들은 대폭소.',fx:{subs:RI(20,70)}}:{text:'모델이 계속 떨려서 방송을 일찍 껐어요.',fx:{mental:-8}}},
+ {id:'fanart',e:'🎨',t:'팬아트 선물',run:s=>({text:'시청자가 정성스러운 팬아트를 보내줬어요. 배경화면으로 해야겠어요!',fx:{mental:16}})},
+ {id:'qna',e:'❓',t:'Q&A 대박',when:(s,c)=>c.type==='talk',run:s=>({text:'시청자 질문에 재치 있게 답하다 보니 시간 가는 줄 몰랐어요.',fx:{subs:RI(20,60),talk:3,mental:5}})},
+ {id:'slip',e:'😰',t:'말실수 논란',w:.9,when:s=>s.subs>=150,run:s=>({text:'방송 중 무심코 한 말이 커뮤니티에서 논란이 됐어요. 어떻게 할까요?',choices:[
+   {label:'🙇 사과 방송을 한다',go:s=>({text:'진심 어린 사과에 팬들이 이해해 줬어요.',fx:{mental:-10,subs:RI(0,10)}})},
+   {label:'🤐 조용히 넘어간다',go:s=>chance(.6)?{text:'다행히 금방 잊혔어요.',fx:{mental:-4}}:{text:'논란이 커져 구독 취소가 이어졌어요…',fx:{subs:-Math.round(s.subs*.08),mental:-18}}}]})},
+ {id:'spam',e:'🤖',t:'스팸 봇 습격',run:s=>({text:'채팅창이 광고 봇으로 도배됐어요. 정리하느라 방송 흐름이 끊겼어요.',fx:{mental:-6}})},
+ {id:'sleepy',e:'🥱',t:'방송 중 졸음',w:2,when:s=>s.hp<40,run:s=>({text:'너무 피곤해서 방송 중에 꾸벅꾸벅… 시청자들이 걱정했어요.',fx:{subs:-RI(0,10),hp:-3}})},
+ {id:'mod',e:'🛡️',t:'든든한 매니저',when:s=>s.subs>=80,run:s=>({text:'오래 본 시청자가 자진해서 채팅 매니저를 맡아줬어요!',fx:{mental:8}})},
+ {id:'global',e:'🌏',t:'해외 팬 유입',when:s=>s.subs>=500,run:s=>({text:'해외 커뮤니티에 소개돼서 외국 시청자가 늘었어요! "KAWAII!"',fx:{subs:RI(50,150)+s.subs*.04}})},
+ {id:'sponsor',e:'🤝',t:'협찬 제안',when:s=>s.subs>=1000,run:s=>({text:'게임 회사에서 유료 광고 방송 제안이 왔어요.',choices:[
+   {label:'💸 수락한다',go:s=>chance(.7)?{text:'광고도 자연스럽게 소화했어요! 두둑한 광고비 획득.',fx:{money:150000+s.subs*5}}:{text:'광고비는 받았지만 "광고 너무 티 난다"는 반응이…',fx:{money:150000+s.subs*5,mental:-12}}},
+   {label:'🙅 거절한다',go:s=>({text:'"광고보다 우리랑 노는 게 좋대!" 팬들의 신뢰가 깊어졌어요.',fx:{subs:RI(20,60),mental:5}})}]})},
+ {id:'member',e:'💳',t:'멤버십 가입 러시',when:s=>s.flags.m1000,run:s=>({text:'새 멤버십 이모티콘이 귀엽다며 가입자가 쏟아졌어요!',fx:{money:s.subs*12,mental:8}})},
+ {id:'superchat',e:'🔥',t:'후원 릴레이',w:.9,when:s=>s.subs>=300,run:s=>({text:'한 명이 후원하자 너도나도 후원 릴레이가 시작됐어요!',fx:{money:RI(40000,120000)+s.subs*4}})},
+ {id:'marathon',e:'⏰',t:'10시간 내구 방송 도전?',when:s=>s.hp>=40,run:s=>({text:'시청자들이 내구 방송을 하자고 졸라요.',choices:[
+   {label:'💪 도전한다!',go:s=>({text:'10시간 완주! 몸은 녹초지만 모두가 박수를 쳐줬어요.',fx:{hp:-28,mental:-6,subs:RI(60,160)+s.subs*.06,money:RI(30000,90000)}})},
+   {label:'🛌 다음에 할게요',go:s=>({text:'"건강이 최고지!" 다들 이해해 줬어요.',fx:{}})}]})},
+ {id:'noise',e:'🚪',t:'층간소음 항의',when:(s,c)=>c.type==='sing'&&!s.flags.studio,run:s=>({text:'쿵쿵! 이웃집에서 시끄럽다고 항의하러 왔어요…',fx:{mental:-12}})},
+ {id:'meme',e:'🐸',t:'채팅 밈 탄생',run:s=>({text:`${s.name}의 말버릇이 시청자들 사이에서 밈이 됐어요!`,fx:{subs:RI(15,50),mental:6}})},
+ {id:'zero',e:'🫥',t:'시청자 0명…',w:3,when:s=>s.subs<40,run:s=>({text:'한 시간 동안 아무도 오지 않았어요. 혼잣말만 계속…',fx:{mental:-10,talk:1}})},
+ {id:'copyright',e:'⚠️',t:'저작권 경고',when:(s,c)=>c.type==='sing'||c.type==='game',run:s=>({text:'배경음악 때문에 다시보기가 차단됐어요. 이용 규칙을 다시 확인해야겠어요.',fx:{mental:-10,money:-RI(0,20000)}})},
+ {id:'agencywatch',e:'👔',t:'관계자가 지켜본다',when:s=>s.subs>=3000,run:s=>({text:'채팅창에 기획사 공식 계정이 보였어요! 긴장했지만 최선을 다했어요.',fx:{subs:RI(40,100),mental:-4}})},
+ {id:'fanmv',e:'📼',t:'팬 제작 MV',when:s=>s.subs>=700,run:s=>({text:'팬이 방송 하이라이트로 뮤직비디오를 만들었어요. 감동 그 자체!',fx:{subs:RI(40,120),mental:14}})},
+ {id:'trend',e:'📈',t:'실시간 트렌드 1위',w:.6,run:s=>({text:'방송 제목이 SNS 실시간 트렌드 1위에 올랐어요!',fx:{subs:RI(120,300)+s.subs*.15}})},
+ {id:'hungry',e:'🍙',t:'꼬르륵 사고',run:s=>({text:'조용한 순간에 배에서 꼬르륵 소리가… 마이크에 그대로 잡혔어요.',fx:{subs:RI(5,25),mental:-4}})},
+ {id:'bug',e:'🐞',t:'버그 발견, 개발사가 반응!',when:(s,c)=>c.type==='game',run:s=>({text:'신기한 버그를 발견했는데 게임 개발사 공식 계정이 공유해 줬어요!',fx:{subs:RI(50,140)}})},
+ {id:'chem',e:'💞',t:'합방 케미 폭발',w:3,when:(s,c)=>c.type==='collab',run:s=>({text:'합방 상대와 티키타카가 완벽했어요! "다음 합방 언제?" 문의 폭주.',fx:{subs:RI(60,180)+s.subs*.04,talk:2,mental:6}})},
+ {id:'late',e:'⌛',t:'합방 상대 지각',w:2,when:(s,c)=>c.type==='collab',run:s=>({text:'합방 상대가 40분이나 늦었어요. 혼자 시간 끄느라 진땀을 뺐어요.',fx:{mental:-10,talk:2}})},
+ {id:'asmr',e:'🎧',t:'ASMR 요청',when:s=>s.subs>=150,run:s=>({text:'시청자들이 ASMR을 해달라고 해요!',choices:[
+   {label:'🤫 해본다',go:s=>chance(.6)?{text:'속삭이는 목소리에 다들 녹아버렸어요. 새로운 매력 발견!',fx:{subs:RI(40,110),mental:4}}:{text:'너무 어색해서 웃음이 터졌어요ㅋㅋ 그래도 재밌었대요.',fx:{subs:RI(5,30),mental:-3}}},
+   {label:'🙅 아직 부끄러워요',go:s=>({text:'"언젠가 해줘!" 다들 아쉬워했어요.',fx:{}})}]})},
+ {id:'birthday',e:'🎂',t:'시청자 생일 축하',run:s=>({text:'오늘 생일인 시청자를 위해 모두가 함께 축하 노래를 불렀어요.',fx:{mental:10,subs:RI(5,20)}})},
+ {id:'lag',e:'🐌',t:'방송 렉 폭발',when:s=>!s.equip.pc,run:s=>({text:'화면이 슬라이드쇼처럼 끊겨요… 장비를 바꿀 때가 됐나 봐요.',fx:{mental:-8,subs:-RI(0,6)}})},
+];
+
+const LE=[ // life events (rest / work / outing)
+ {id:'parcel',e:'📦',t:'팬 선물 택배',when:s=>s.subs>=200,run:s=>({text:'팬들이 보낸 간식과 편지가 도착했어요. 마음이 따뜻해졌어요.',fx:{mental:15}})},
+ {id:'cold',e:'🤧',t:'감기에 걸렸다',run:s=>({text:'에취! 감기 기운이 있어요. 따뜻하게 해야겠어요.',fx:{hp:-15}})},
+ {id:'friend',e:'🍜',t:'친구의 맛집 초대',run:s=>({text:'오랜 친구가 맛집에 가자고 연락이 왔어요.',choices:[
+   {label:'🍽️ 같이 간다',go:s=>({text:'맛있는 음식과 수다로 스트레스가 확 풀렸어요!',fx:{mental:18,money:-25000}})},
+   {label:'🏠 다음에 갈게',go:s=>({text:'아쉽지만 돈을 아꼈어요.',fx:{mental:-3}})}]})},
+ {id:'goodsleep',e:'🌙',t:'꿀잠 잤다',run:s=>({text:'12시간 푹 잤어요. 개운해요!',fx:{hp:15,mental:5}})},
+ {id:'recognized',e:'👀',t:'길에서 알아본 팬',when:s=>s.subs>=10000,run:s=>({text:'"혹시… 목소리가 그분 아니세요?" 목소리만으로 알아본 팬을 만났어요!',fx:{mental:15}})},
+ {id:'parents',e:'📞',t:'부모님 전화',run:s=>({text:'"요즘 뭐 하고 지내니?" 부모님께 전화가 왔어요.',choices:[
+   {label:'😊 버튜버 한다고 말한다',go:s=>s.subs>=5000?{text:'"우리 딸 대단하다!" 몰래 방송도 보고 계셨대요. 용돈까지!',fx:{mental:20,money:50000}}:{text:'"그게 뭐니…?" 걱정하셨지만 응원해 주셨어요.',fx:{mental:4}}},
+   {label:'😅 그냥 잘 지낸다고 한다',go:s=>({text:'안부만 전했어요. 조금 찔리네요.',fx:{mental:-2}})}]})},
+ {id:'rudecus',e:'😤',t:'진상 손님',when:(s,c)=>c.type==='work',run:s=>({text:'알바 중에 진상 손님을 만났어요… 오늘 방송 썰로 풀어야겠어요.',fx:{mental:-12,talk:2}})},
+ {id:'bonus',e:'💵',t:'사장님 보너스',when:(s,c)=>c.type==='work',run:s=>({text:'"요즘 열심히 하네!" 사장님이 보너스를 주셨어요.',fx:{money:30000,mental:6}})},
+ {id:'compose',e:'🎼',t:'새벽 감성 작곡',when:(s,c)=>c.type==='rest',run:s=>({text:'잠들기 전 떠오른 멜로디로 노래를 만들었어요!',fx:{sing:4,mental:5}})},
+ {id:'lucky',e:'🍀',t:'길에서 주운 복권',when:(s,c)=>c.type==='outing',run:s=>chance(.3)?{text:'긁어봤더니 당첨! 오늘은 운수 좋은 날!',fx:{money:100000,mental:10}}:{text:'꽝… 그래도 산책은 즐거웠어요.',fx:{mental:3}}},
+ {id:'arcade',e:'🕹️',t:'오락실 방문',when:(s,c)=>c.type==='outing',run:s=>({text:'오락실에서 리듬게임을 실컷 했어요. 손이 풀렸어요!',fx:{game:3,money:-8000}})},
+ {id:'karaoke',e:'🎤',t:'코인 노래방',when:(s,c)=>c.type==='outing',run:s=>({text:'혼코노 2시간! 목이 트였어요.',fx:{sing:3,money:-6000}})},
+];
+
+const TH=[ // threshold events
+ {id:'collapse',e:'🚑',t:'과로로 쓰러졌다',chk:s=>s.hp<=0,run:s=>{s.day+=3;s.hp=60;return{text:'무리하다가 결국 쓰러져 병원에 실려 갔어요.\n3일 동안 입원했고 병원비가 나왔어요.',fx:{money:-80000,mental:-10}}}},
+ {id:'burnout',e:'🕯️',t:'번아웃',chk:s=>s.mental<=0,run:s=>{s.day+=5;s.mental=50;s.burnouts++;return{text:`마음이 완전히 지쳐버렸어요. 5일간 활동을 쉬었어요.\n(번아웃 ${s.burnouts}/3 — 3번이면 은퇴해요)`,fx:{subs:-Math.round(s.subs*.1)}}}},
+ {id:'lowhp',e:'🌡️',t:'몸이 무거워요',chk:s=>s.hp<=20&&s.hp>0&&!s.flags.lowhp,run:s=>{s.flags.lowhp=1;return{text:'몸살 기운이 심해요. 이대로면 쓰러질지도 몰라요.\n(체력 30 이하에서는 방송 효율이 떨어져요)',fx:{mental:-5}}}},
+ {id:'lowmental',e:'🌧️',t:'우울한 밤',chk:s=>s.mental<=20&&s.mental>0&&!s.flags.lowmn,run:s=>{s.flags.lowmn=1;return{text:'댓글 하나하나가 신경 쓰이고 잠이 오지 않아요.\n잠깐 쉬어가는 것도 용기예요.',fx:{hp:-5}}}},
+ {id:'debt',e:'📨',t:'빚 독촉',chk:s=>s.money<0&&!s.flags.debt,run:s=>{s.flags.debt=1;return{text:'통장이 마이너스가 됐어요! 독촉 문자가 오기 시작했어요.\n(-50만원 이하가 되면 게임 오버)',fx:{mental:-15}}}},
+ {id:'peak',e:'✨',t:'최상의 컨디션!',chk:s=>s.hp>=90&&s.mental>=90&&s.day>3&&!s.flags.peak,run:s=>{s.flags.peak=1;s.buff=Math.max(s.buff,1.5);return{text:'몸도 마음도 가벼워요! 다음 방송 시청자가 1.5배가 돼요.',fx:{}}}},
+ {id:'upgrade',e:'🛒',t:'장비 업그레이드 고민',chk:s=>s.money>=400000&&!s.equip.pc&&!s.flags.upq,run:s=>{s.flags.upq=1;return{text:'돈이 꽤 모였어요! 할인 중인 게이밍 PC를 살까요? (30만원)',choices:[
+   {label:'🖥️ 산다! (₩300,000)',go:s=>{s.equip.pc=1;return{text:'새 PC 도착! 게임 방송이 쾌적해졌어요.',fx:{money:-300000,mental:10}}}},
+   {label:'💰 아껴둔다',go:s=>({text:'나중을 위해 저축했어요.',fx:{}})}]}}},
+ {id:'studio',e:'🏡',t:'방송용 스튜디오 이사',chk:s=>s.money>=1000000&&!s.flags.studio&&!s.flags.studioQ,run:s=>{s.flags.studioQ=1;return{text:'방음이 잘 되는 스튜디오 원룸이 나왔어요! 이사할까요? (80만원)',choices:[
+   {label:'📦 이사한다',go:s=>{s.flags.studio=1;return{text:'새 스튜디오로 이사! 층간소음 걱정 끝, 마음도 편해졌어요.\n(정신력 회복 효과 +)',fx:{money:-800000,mental:25}}}},
+   {label:'🙅 지금 집도 괜찮아',go:s=>({text:'정든 집에 남기로 했어요.',fx:{}})}]}}},
+ {id:'fanmeet',e:'💖',t:'첫 팬미팅 개최!',chk:s=>s.hp>=70&&s.mental>=70&&s.money>=500000&&s.subs>=10000&&!s.flags.fanmeet,run:s=>{s.flags.fanmeet=1;return{text:'체력·정신력·자금이 모두 넉넉해 온라인 팬미팅을 열었어요!\n팬들과 함께한 꿈 같은 시간이었어요.',fx:{money:-200000,subs:Math.round(s.subs*.2),mental:30,hp:-20}}}},
+ {id:'scout',e:'🏢',t:'대형 기획사 스카우트',chk:s=>s.subs>=50000&&s.mental>=50&&!s.flags.scout,run:s=>{s.flags.scout=1;return{text:'대형 버튜버 기획사에서 소속 제안이 왔어요!',choices:[
+   {label:'✍️ 계약한다',go:s=>{s.flags.agency=1;return{text:'기획사 소속이 됐어요! 홍보 지원으로 구독자가 크게 늘어요.\n(대신 일정이 빡빡해져 방송 정신력 소모 +2)',fx:{subs:Math.round(s.subs*.3),money:500000,mental:-10}}}},
+   {label:'🕊️ 개인세로 남는다',go:s=>({text:'"내 방식대로 할래!" 자유로운 개인 활동을 이어가요. 팬들이 더 응원해 줘요.',fx:{mental:15,subs:RI(500,1500)}})}]}}},
+ {id:'impulse',e:'🛍️',t:'충동구매',chk:s=>s.mental<=30&&s.money>=200000&&!s.flags.imp,run:s=>{s.flags.imp=1;return{text:'스트레스를 받아 새벽에 쇼핑몰 장바구니를 전부 결제해 버렸어요…',fx:{money:-RI(80000,150000),mental:12}}}},
+ {id:'rich',e:'🤑',t:'통장이 두둑해요',chk:s=>s.money>=3000000&&!s.flags.rich,run:s=>{s.flags.rich=1;return{text:'통장 잔고가 300만원을 넘었어요! 팬들을 위해 기부 이벤트를 열었어요.',fx:{money:-500000,subs:RI(2000,5000),mental:20}}}},
+ {id:'workaholic',e:'⚡',t:'워커홀릭 경고',chk:s=>s.flags.streak>=6&&!s.flags.wah,run:s=>{s.flags.wah=1;return{text:'6일 연속 방송 중이에요! 팬들이 "제발 좀 쉬어"라고 걱정해요.',fx:{subs:RI(20,80),hp:-10}}}},
+];
+const MILESTONES=[[100,'💯','구독자 100명!','첫 번째 목표 달성! 팬들이 축하 채팅을 보내줬어요.',{mental:15}],
+ [1000,'🎊','구독자 1,000명 · 수익화 달성!','이제 멤버십이 열렸어요! 매주 멤버십 수익이 들어와요.',{mental:20,money:50000}],
+ [10000,'🥈','구독자 1만 명!','커뮤니티가 활발해졌어요. 이제 길에서 알아보는 사람도 생길지도?',{mental:20}],
+ [50000,'🌠','구독자 5만 명!','업계에서 이름이 알려지기 시작했어요!',{mental:20}],
+ [100000,'🏅','실버 버튼 도착!','구독자 10만 명! 반짝이는 실버 버튼이 도착했어요.',{mental:30,money:300000}],
+ [500000,'👑','구독자 50만 명!','이제 모두가 아는 인기 버튜버예요!',{mental:30}],
+ [1000000,'🏆','골드 버튼! 100만 구독자!','전설이 됐어요. 감격의 눈물이 멈추지 않아요.',{mental:40,money:1000000}]];
+MILESTONES.forEach(([n,e,t,txt,fx])=>TH.push({id:'m'+n,e,t,chk:s=>s.subs>=n&&!s.flags['m'+n],run:s=>{s.flags['m'+n]=1;return{text:txt,fx}}}));
+const ALL_EVENTS=[...SE,...LE,...TH,{id:'rent',e:'🏠',t:'주간 생활비'}];
+
+/* ---------------- core ---------------- */
+let Q=[],busy=false;
+function addLog(e,t){S.log.unshift({d:S.day,e,t});if(S.log.length>80)S.log.pop()}
+function apply(fx){const d={};if(!fx)return d;
+  for(const k in fx){let v=Math.round(fx[k]);if(!v)continue;
+    if(k==='hp'||k==='mental'){const b=S[k];S[k]=clamp(b+v,0,100);if(S[k]!==b)d[k]=S[k]-b}
+    else if(k==='subs'){const b=S.subs;S.subs=Math.max(0,b+v);if(S.subs!==b)d.subs=S.subs-b}
+    else if(k==='money'){S.money+=v;d.money=v}
+    else if(k in S.skill){const b=S.skill[k];S.skill[k]=clamp(b+v,0,100);if(S.skill[k]!==b)d[k]=S.skill[k]-b}
+  }return d}
+function fire(ev,ctx){S.seen[ev.id]=1;const r=ev.run(S,ctx||{});const d=r.choices?null:apply(r.fx);
+  addLog(ev.e,ev.t+(r.choices?'':''));Q.push({e:ev.e,t:ev.t,text:r.text,d,choices:r.choices})}
+function pickEvent(pool,ctx){const ok=pool.filter(e=>!e.when||e.when(S,ctx));let sum=ok.reduce((a,e)=>a+(e.w||1),0),x=Math.random()*sum;
+  for(const e of ok){x-=(e.w||1);if(x<=0)return e}return ok[0]}
+function checkTH(){
+  if(S.hp>50)S.flags.lowhp=0; if(S.mental>50)S.flags.lowmn=0; if(S.money>=0)S.flags.debt=0;
+  if(S.hp<70||S.mental<70)S.flags.peak=0; if(S.mental>50)S.flags.imp=0; if((S.flags.streak||0)<3)S.flags.wah=0;
+  let added=false;for(const t of TH){if(t.chk(S)){fire(t);added=true;break}}return added}
+function nextDay(n=1){for(let i=0;i<n;i++){S.day++;
+  if(S.day%7===0){S.seen.rent=1;let fee=70000,inc=S.flags.m1000?Math.round(S.subs*15):0;const d=apply({money:inc-fee});
+    const txt=inc?`월세·식비로 ₩70,000이 나갔어요.\n멤버십 수익 ${won(inc)}이 들어왔어요!`:'월세·식비로 ₩70,000이 나갔어요.';
+    addLog('🏠','주간 생활비 정산');Q.push({e:'🏠',t:`${S.day}일차 · 주간 정산`,text:txt,d})}}}
+function next(){render();
+  if(!Q.length){if(!S.over&&checkTH())return next();closeModal();render();save();checkEnd();return}
+  showModal(Q.shift())}
+
+function streamFactor(type){const st=STREAMS[type],eq=S.equip;let f=1;
+  if(type==='sing'&&eq.mic)f*=1.25;if(type==='game'&&eq.pc)f*=1.25;if((type==='talk'||type==='collab')&&eq.light)f*=1.2;if(eq.track)f*=1.1;
+  if(S.outfit!=='basic')f*=1.05;return f}
+function doStream(type){const st=STREAMS[type];
+  if(type==='collab'&&S.subs<300){toast('🔒 합방은 구독자 300명부터 가능해요');return}
+  busy=true;setBtns();S.streams++;
+  liveOn(type);
+  if(CAM.on&&CAM.ready)return startLive(type);
+  setTimeout(()=>finishStream(type,null),2700)}
+function finishStream(type,perf){const st=STREAMS[type];
+  {
+    const sk=S.skill[st.skill];
+    let cond=(S.hp<30?.6:1)*(S.mental<30?.7:1);
+    const pm=perf?perf.mul:1;
+    let viewers=(4+Math.sqrt(S.subs)*2.6+S.subs*.02)*(1+sk/45)*streamFactor(type)*cond*R(.7,1.35)*S.buff*st.mul*pm;
+    viewers=Math.max(1,Math.round(viewers));
+    const gain=Math.round(viewers*R(.1,.28)*(1+sk/120)+RI(1,4));
+    const don=Math.round(viewers*R(300,1500)*(chance(.15)?3:1)/100)*100;
+    const hpCost=Math.round(st.hp*(S.equip.chair?.7:1));const mnCost=st.mental+(S.flags.agency?2:0)-(S.flags.studio?2:0);
+    S.buff=1;S.totalDon+=don;S.flags.streak=(S.flags.streak||0)+1;
+    const fx={subs:gain,money:don+(perf?perf.money:0),hp:-hpCost,mental:-mnCost+(perf?perf.mental:0),[st.skill]:RI(1,2)};
+    if(perf&&perf.talk)fx.talk=(fx.talk||0)+perf.talk;
+    const d=apply(fx);
+    $('#viewB').textContent='👀 '+fmt(viewers);
+    addLog(st.emoji,`${st.name}${perf?' 📷':''} · 시청자 ${fmt(viewers)}명, 후원 ${won(don)}`);
+    Q.push({e:st.emoji,t:`${st.name} 종료!`,text:`최고 동시 시청자 ${fmt(viewers)}명\n받은 후원 ${won(don)}`+(perf?`\n\n📷 리액션 결과\n${perf.text}`:''),d});
+    const ctx={type,viewers};
+    if(chance(perf?.55:.68)){fire(pickEvent(SE,ctx),ctx)}
+    nextDay();liveOff();busy=false;next();
+  }}
+
+/* ---------------- camera mode (face + hand tracking) ---------------- */
+const MP='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+const CAM={on:false,ready:false,stream:null,face:null,gest:null,fc:0,lt:-1,
+  T:{face:false,smile:0,jaw:0,bl:0,br:0,roll:0,yaw:0,gesture:'None'}};
+const GEST={Open_Palm:'👋',Victory:'✌️',Thumb_Up:'👍',Thumb_Down:'👎',ILoveYou:'🤟',Closed_Fist:'✊',Pointing_Up:'☝️'};
+const MISSIONS=[
+ {id:'smile',q:'활짝 웃어 주세요! 😊',hold:800,ok:T=>T.smile>.5},
+ {id:'palm',q:'손바닥을 보여주며 인사! 👋',hold:500,ok:T=>T.gesture==='Open_Palm'},
+ {id:'v',q:'브이 해 주세요 ✌️',hold:500,ok:T=>T.gesture==='Victory'},
+ {id:'thumb',q:'따봉 날려 주세요 👍',hold:500,ok:T=>T.gesture==='Thumb_Up'},
+ {id:'love',q:'사랑해 손가락 🤟',hold:500,ok:T=>T.gesture==='ILoveYou'},
+ {id:'fist',q:'주먹 쥐고 화이팅! ✊',hold:500,ok:T=>T.gesture==='Closed_Fist'},
+ {id:'point',q:'검지 들고 "하나 더!" ☝️',hold:500,ok:T=>T.gesture==='Pointing_Up'},
+ {id:'tilt',q:'고개를 갸웃해 주세요 🤔',hold:600,ok:T=>Math.abs(T.roll)>14},
+ {id:'wink',q:'윙크 날려 주세요 😉',hold:250,ok:T=>Math.abs(T.bl-T.br)>.4},
+ {id:'talk',q:'"안녕하세요!" 크게 인사 🗣️',hold:900,ok:T=>T.jaw>.25,accum:true},
+ {id:'wow',q:'깜짝 놀란 표정! 😮',hold:500,ok:T=>T.jaw>.5},
+];
+const SING_M={id:'sing',q:'입을 크게 벌려 고음 발사! 🎶',hold:1200,ok:T=>T.jaw>.3,accum:true};
+const GAME_M={id:'focus',q:'진지한 표정으로 집중! 😐',hold:1500,ok:T=>T.smile<.15&&T.jaw<.1,accum:true};
+
+function camHud(t){$('#camHud').textContent=t}
+function camExplain(err){
+  const framed=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+  const denied=err&&(err.name==='NotAllowedError'||err.name==='SecurityError');
+  let msg;
+  if(framed)msg='지금 열린 페이지는 보안상 카메라를 쓸 수 없는 환경이에요.\n\n카메라 모드는 이 게임 파일(index.html)을 직접 올린 https 주소(GitHub Pages, Netlify 등)에서 작동해요.\n카메라 없이도 게임은 그대로 즐길 수 있어요!';
+  else if(denied)msg='카메라 권한이 거부됐어요.\n주소창 왼쪽의 자물쇠/카메라 아이콘에서 카메라를 "허용"으로 바꾼 뒤 다시 눌러 주세요.';
+  else if(!window.isSecureContext)msg='카메라는 https 주소에서만 사용할 수 있어요.';
+  else msg='카메라를 찾지 못했어요. 카메라가 연결되어 있는지 확인해 주세요.';
+  $('#modal').innerHTML=`<div class="em">📷</div><h2>카메라를 켤 수 없어요</h2><p>${msg}</p><div class="btns"><button class="btn" id="cl">확인</button></div>`;
+  $('#ov').classList.add('on');$('#cl').onclick=closeModal}
+async function mkTask(Cls,fs,opts){try{return await Cls.createFromOptions(fs,{...opts,baseOptions:{...opts.baseOptions,delegate:'GPU'}})}
+  catch(e){return await Cls.createFromOptions(fs,{...opts,baseOptions:{...opts.baseOptions,delegate:'CPU'}})}}
+async function toggleCam(){
+  if(busy)return;
+  if(CAM.on){stopCam();return}
+  const btn=$('#camBtn');btn.textContent='📷 권한 요청 중…';
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw Object.assign(new Error('no media'),{name:'NoMedia'});
+    CAM.stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:640},height:{ideal:480},facingMode:'user'},audio:false});
+  }catch(e){btn.textContent='📷 카메라 모드';camExplain(e);return}
+  const v=$('#cam');v.srcObject=CAM.stream;try{await v.play()}catch(e){}
+  CAM.on=true;btn.textContent='📷 카메라 ON';btn.classList.add('camOn');$('#camBox').style.display='';camHud('인식 모델 불러오는 중…');render();
+  try{
+    const mod=await import(MP+'/vision_bundle.mjs');const V=mod.FilesetResolver?mod:mod.default;
+    const fs=await V.FilesetResolver.forVisionTasks(MP+'/wasm');
+    CAM.face=await mkTask(V.FaceLandmarker,fs,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task'},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true});
+    CAM.gest=await mkTask(V.GestureRecognizer,fs,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task'},runningMode:'VIDEO',numHands:1});
+    if(!CAM.on)return;
+    CAM.ready=true;camHud('얼굴을 화면에 맞춰 주세요');render();
+    toast('✅ 인식 준비 완료! 이제 방송에서 시청자 미션이 나와요');requestAnimationFrame(camLoop);
+  }catch(e){console.error(e);camHud('⚠️ 인식 모델 로딩 실패');toast('인식 모델을 불러오지 못했어요. 네트워크를 확인해 주세요')}
+}
+function stopCam(){CAM.on=false;CAM.ready=false;if(CAM.stream)CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null;
+  $('#camBox').style.display='none';$('#camBtn').textContent='📷 카메라 모드';$('#camBtn').classList.remove('camOn');
+  $('#rig').setAttribute('transform','');CAM.T.face=false;render()}
+function camLoop(){if(!CAM.on||!CAM.ready)return;
+  const v=$('#cam'),now=performance.now(),T=CAM.T;
+  if(v.readyState>=2&&v.currentTime!==CAM.lt){CAM.lt=v.currentTime;
+    try{
+      const r=CAM.face.detectForVideo(v,now);
+      if(r.faceLandmarks&&r.faceLandmarks.length){T.face=true;const L=r.faceLandmarks[0],bs={};
+        ((r.faceBlendshapes&&r.faceBlendshapes[0]&&r.faceBlendshapes[0].categories)||[]).forEach(c=>bs[c.categoryName]=c.score);
+        const sm=((bs.mouthSmileLeft||0)+(bs.mouthSmileRight||0))/2;
+        T.smile=T.smile*.5+sm*.5;T.jaw=T.jaw*.4+(bs.jawOpen||0)*.6;T.bl=bs.eyeBlinkLeft||0;T.br=bs.eyeBlinkRight||0;
+        const a=L[33],b=L[263],n=L[1];
+        T.roll=T.roll*.5+(Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI)*.5;
+        T.yaw=T.yaw*.5+((n.x-(a.x+b.x)/2)/(Math.abs(b.x-a.x)||1))*.5;
+      }else T.face=false;
+      if(++CAM.fc%2===0){const g=CAM.gest.recognizeForVideo(v,now);const c=g.gestures&&g.gestures[0]&&g.gestures[0][0];
+        T.gesture=(c&&c.score>.6)?c.categoryName:'None'}
+    }catch(e){console.warn(e)}
+    driveAvatar();liveTick(now);
+  }
+  requestAnimationFrame(camLoop)}
+function driveAvatar(){const T=CAM.T,vt=$('#vt'),rig=$('#rig');
+  if(!T.face){rig.setAttribute('transform','');camHud('😶 얼굴이 안 보여요');return}
+  const r=clamp(-T.roll,-18,18),x=clamp(-T.yaw*45,-16,16);
+  rig.setAttribute('transform',`translate(${x.toFixed(1)} 0) rotate(${r.toFixed(1)} 150 250)`);
+  const closed=(T.bl+T.br)/2>.5;
+  vt.dataset.exp=(closed||T.smile>.55)?'happy':(S.mental<20?'sad':(S.hp<25?'tired':'normal'));
+  vt.dataset.mouth=T.jaw>.18?'open':(T.smile>.3?'smile':'flat');
+  camHud(`😊 ${Math.round(T.smile*100)}%  👄 ${Math.round(T.jaw*100)}%  ${GEST[T.gesture]||'✋—'}`)}
+
+let LIVE=null;
+const LIVE_LEN=20500;
+function startLive(type){
+  const pool=[...MISSIONS];if(type==='sing')pool.push(SING_M,SING_M);if(type==='game')pool.push(GAME_M,GAME_M);
+  const ms=[];while(ms.length<3){const m=pick(pool);if(!ms.includes(m))ms.push(m)}
+  LIVE={type,start:performance.now(),prev:0,total:0,faceT:0,smileT:0,talkT:0,sleep:0,slept:0,away:0,awayW:0,success:0,gcd:0,lastG:'None',
+    ms:ms.map((m,i)=>({...m,at:2500+i*6000,h:0,state:0}))};
+  chatSys('📷 카메라 방송 시작! 시청자 미션 3개가 나와요');
+  const me=LIVE;setTimeout(()=>{if(LIVE===me){me.total=me.total||1;endLive()}},LIVE_LEN+5000);
+}
+function chatSys(t){const c=$('#chat'),el=document.createElement('div');el.className='msg sys';el.textContent=t;c.appendChild(el);while(c.children.length>9)c.firstChild.remove()}
+function chatBurst(lines,n){for(let i=0;i<n;i++)setTimeout(()=>{const c=$('#chat'),el=document.createElement('div');el.className='msg';el.innerHTML=`<b>${pick(NICKS)}</b>${pick(lines)}`;c.appendChild(el);while(c.children.length>9)c.firstChild.remove()},i*140)}
+const GEST_CHAT={Open_Palm:['안녕~~ 👋','하이하이!','손 흔드는 거 귀여워'],Victory:['브이 귀여워!!','✌️✌️✌️','브이 장인'],Thumb_Up:['따봉 받았다 👍','저도 따봉!'],
+  ILoveYou:['🤟🤟 나도 사랑해','심장 아파 ㅠㅠ'],Closed_Fist:['화이팅!!! ✊','같이 힘내요'],Pointing_Up:['하나 더!!','오 집중'],Thumb_Down:['왜 우우야ㅋㅋ','ㅋㅋㅋ 우우~']};
+function liveTick(now){const L=LIVE;if(!L)return;const T=CAM.T;
+  const dt=L.prev?Math.min(100,now-L.prev):0;L.prev=now;L.total+=dt;const t=now-L.start;
+  if(T.face){L.faceT+=dt;if(T.smile>.4)L.smileT+=dt;if(T.jaw>.15)L.talkT+=dt;L.away=0;
+    if((T.bl+T.br)/2>.6){L.sleep+=dt;if(L.sleep>2500&&!L.slept){L.slept=1;chatSys('😴 자요…? 눈 감은 지 너무 오래됐어요!')}}else L.sleep=0;
+  }else{L.away+=dt;if(L.away>3000&&!L.awayW){L.awayW=1;chatSys('👀 어디 갔어요? 얼굴이 안 보여요!')}}
+  const cur=L.ms.find(m=>m.state===0&&t>=m.at);
+  if(T.gesture!=='None'&&T.gesture!==L.lastG&&now>L.gcd&&!cur&&GEST_CHAT[T.gesture]){chatBurst(GEST_CHAT[T.gesture],3);L.gcd=now+2500}
+  L.lastG=T.gesture;
+  const box=$('#mission');
+  if(cur){const idx=L.ms.indexOf(cur);
+    box.style.display='block';box.className='mission';$('#misK').textContent=`📣 시청자 미션 ${idx+1}/3`;$('#misQ').textContent=cur.q;
+    if(cur.ok(T))cur.h+=dt;else if(!cur.accum)cur.h=0;
+    $('#misH').style.width=Math.min(100,cur.h/cur.hold*100)+'%';
+    const left=1-(t-cur.at)/5000;$('#misT').style.width=Math.max(0,left*100)+'%';
+    if(cur.h>=cur.hold){cur.state=1;L.success++;box.className='mission ok';$('#misK').textContent='✅ 미션 성공!';
+      chatBurst(['ㅋㅋㅋㅋ 귀여워','완벽해!!','레전드 리액션','클립 각이다','💖💖💖'],5);
+      const el=document.createElement('div');el.className='msg don';el.innerHTML=`<b>${pick(NICKS)}</b>💰 ${fmt(RI(2,10)*1000)}원 후원! 미션 성공 축하해요!`;$('#chat').appendChild(el);
+      setTimeout(()=>{if(LIVE&&!L.ms.find(m=>m.state===0&&performance.now()-L.start>=m.at))box.style.display='none'},1100)}
+    else if(left<=0){cur.state=2;box.className='mission fail';$('#misK').textContent='⌛ 시간 초과…';chatBurst(['아깝다 ㅠㅠ','다음엔 할 수 있어!','ㅋㅋㅋ 놓쳤다'],2);
+      setTimeout(()=>{if(LIVE)box.style.display='none'},1100)}
+  }
+  if(t>=LIVE_LEN)endLive()}
+function endLive(){const L=LIVE;LIVE=null;$('#mission').style.display='none';
+  const tot=Math.max(1,L.total),sr=L.smileT/tot,tr=L.talkT/tot,fr=L.faceT/tot;
+  let mul=.75+.2*L.success+.35*sr+.25*Math.min(1,tr*1.6)-(L.slept?.15:0)-(L.awayW?.2:0)-(fr<.5?.15:0);
+  mul=clamp(mul,.5,1.9);
+  const money=Math.round(L.success*RI(3000,8000)*(1+Math.sqrt(S.subs)/10)/100)*100;
+  const mental=L.success===3?8:L.success===0?-5:0;
+  const talk=tr>.35?1:0;
+  const lines=[`미션 성공 ${L.success}/3 · 웃음 ${Math.round(sr*100)}% · 말하기 ${Math.round(tr*100)}%`];
+  if(L.slept)lines.push('😴 졸음 감지 (감점)');if(L.awayW)lines.push('👀 자리비움 감지 (감점)');
+  if(L.success===3)lines.push('🎉 퍼펙트 리액션! 정신력 +8');
+  lines.push(`방송 점수 x${mul.toFixed(2)}`+(money?` · 미션 후원 +${won(money)}`:''));
+  finishStream(L.type,{mul,money,mental,talk,text:lines.join('\n')})}
+$('#camBtn').onclick=toggleCam;
+function doAction(a){if(busy||S.over)return;
+  if(STREAMS[a])return doStream(a);
+  S.flags.streak=0;
+  if(a==='rest'){const d=apply({hp:35,mental:15+(S.flags.studio?5:0)});addLog('😴','푹 쉬었어요');Q.push({e:'😴',t:'휴식',text:'이불 속에서 뒹굴뒹굴. 충전 완료!',d});
+    if(chance(.3))fire(pickEvent(LE,{type:'rest'}),{type:'rest'});nextDay();next()}
+  else if(a==='work'){const d=apply({money:RI(6,9)*10000,hp:-15,mental:-10});addLog('💼','아르바이트');Q.push({e:'💼',t:'아르바이트',text:'편의점에서 열심히 일했어요. 방송 장비 살 날을 꿈꾸며!',d});
+    if(chance(.35))fire(pickEvent(LE,{type:'work'}),{type:'work'});nextDay();next()}
+  else if(a==='outing'){const d=apply({mental:25,money:-30000});addLog('🌸','외출');Q.push({e:'🌸',t:'외출',text:'카페에 들르고 산책도 했어요. 기분 전환 성공!',d});
+    if(chance(.55))fire(pickEvent(LE,{type:'outing'}),{type:'outing'});nextDay();next()}
+  else if(a==='practice'){Q.push({e:'📚',t:'무엇을 연습할까요?',text:'꾸준한 연습이 실력이 돼요.',choices:[
+    {label:'🎮 게임 연습',go:s=>{nextDay();addLog('📚','게임 연습');return{text:'고난도 맵을 반복 연습했어요!',fx:{game:RI(3,5),hp:-6,mental:-4}}}},
+    {label:'🎤 노래 연습',go:s=>{nextDay();addLog('📚','노래 연습');return{text:'발성 연습을 열심히 했어요!',fx:{sing:RI(3,5),hp:-6,mental:-4}}}},
+    {label:'💬 토크 연습',go:s=>{nextDay();addLog('📚','토크 연습');return{text:'인기 방송을 보며 리액션을 연구했어요!',fx:{talk:RI(3,5),hp:-6,mental:-4}}}}],cancel:true});next()}
+}
+
+/* ---------------- endings ---------------- */
+function checkEnd(){if(S.over)return;let e=null;
+  if(S.burnouts>=3)e=['🕊️','은퇴 엔딩','세 번의 번아웃 끝에 잠시 활동을 멈추기로 했어요.\n"언젠가 다시 돌아올게요." 팬들은 오늘도 기다리고 있어요.'];
+  else if(S.money<=-500000)e=['💸','현실의 벽 엔딩','빚이 너무 커져 방송을 접고 취업을 하게 됐어요.\n다음엔 돈 관리를 잘 해봐요!'];
+  else if(S.day>100){const n=S.subs;
+    e=n>=1000000?['🏆','전설의 버튜버','100만 구독자! 버튜버 역사에 이름을 남겼어요.']:
+      n>=100000?['👑','톱 버튜버','실버 버튼을 넘어 모두가 아는 인기 버튜버가 됐어요!']:
+      n>=10000?['🌟','떠오르는 스타','탄탄한 팬층과 함께 앞으로가 더 기대되는 버튜버!']:
+      n>=1000?['🌱','작은 별','수익화에 성공한 소중한 개인 버튜버. 팬들과 끈끈해요.']:
+      ['☕','평범한 일상으로','버튜버의 길은 쉽지 않았지만, 즐거운 추억이 남았어요.'];}
+  if(!e)return;S.over=true;save();
+  const seen=Object.keys(S.seen).length;
+  $('#modal').innerHTML=`<div class="em">${e[0]}</div><h2>${e[1]}</h2><p>${e[2]}\n\n최종 구독자 <b>${fmt(S.subs)}명</b> · 누적 후원 <b>${won(S.totalDon)}</b>\n방송 ${S.streams}회 · 발견한 이벤트 ${seen}/${ALL_EVENTS.length}</p><div class="btns"><button class="btn" id="again">다시 시작하기</button></div>`;
+  $('#ov').classList.add('on');$('#again').onclick=()=>intro();}
+
+/* ---------------- UI ---------------- */
+const LBL={hp:'체력',mental:'정신력',money:'돈',subs:'구독자',game:'게임',sing:'노래',talk:'토크'};
+function chips(d){if(!d)return'';return'<div class="chips">'+Object.entries(d).map(([k,v])=>{
+  const s=k==='money'?(v>0?'+':'')+won(v).replace('-₩','-₩'):(v>0?'+':'')+fmt(v);
+  return`<span class="chip ${v>0?'up':'dn'}">${LBL[k]} ${k==='money'?(v>0?'+':'-')+'₩'+fmt(Math.abs(v)):s}</span>`}).join('')+'</div>'}
+function showModal(m){const M=$('#modal');
+  M.innerHTML=`<div class="em">${m.e}</div><h2>${m.t}</h2><p>${m.text||''}</p>${chips(m.d)}<div class="btns"></div>`;
+  const B=M.querySelector('.btns');
+  if(m.choices){m.choices.forEach(c=>{const b=document.createElement('button');b.className='btn'+(B.children.length?' alt':'');b.textContent=c.label;
+      b.onclick=()=>{const r=c.go(S);const d=apply(r.fx);Q.unshift({e:m.e,t:m.t,text:r.text,d});next()};B.appendChild(b)});
+    if(m.cancel){const b=document.createElement('button');b.className='btn alt';b.textContent='취소';b.onclick=()=>{Q=[];next()};B.appendChild(b)}}
+  else{const b=document.createElement('button');b.className='btn';b.textContent='확인';b.onclick=next;B.appendChild(b);setTimeout(()=>b.focus(),50)}
+  $('#ov').classList.add('on')}
+function closeModal(){$('#ov').classList.remove('on')}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('on'),1800)}
+
+let chatTimer=null;
+function liveOn(type){const vt=$('#vt');vt.dataset.exp='happy';vt.dataset.mouth='talk';
+  $('#liveB').textContent='● LIVE';$('#liveB').classList.add('on');$('#viewB').style.display='';
+  const chat=$('#chat');chat.innerHTML='';let v=0;
+  const lines=[...CHATS.all,...CHATS[type]];
+  chatTimer=setInterval(()=>{v+=RI(1,4)+Math.round(Math.sqrt(S.subs)/3);$('#viewB').textContent='👀 '+fmt(v);
+    const el=document.createElement('div');
+    if(chance(.14)){el.className='msg don';el.innerHTML=`<b>${pick(NICKS)}</b>💰 ${fmt(RI(1,10)*1000)}원 후원! ${pick(['화이팅!!','사랑해요','맛있는 거 사 드세요','오늘도 고마워요'])}`}
+    else{el.className='msg';el.innerHTML=`<b>${pick(NICKS)}</b>${pick(lines)}`}
+    chat.appendChild(el);while(chat.children.length>9)chat.firstChild.remove()},260)}
+function liveOff(){clearInterval(chatTimer);$('#liveB').textContent='OFFLINE';$('#liveB').classList.remove('on');setTimeout(()=>{if(!busy){$('#viewB').style.display='none';$('#chat').innerHTML=''}},1500)}
+
+function setOutfit(){const c=OUTFITS[S.outfit].c,r=document.documentElement.style;
+  r.setProperty('--outfit',c[0]);r.setProperty('--outfit2',c[1]);r.setProperty('--bow',c[2]);r.setProperty('--collar',c[3])}
+function setBtns(){document.querySelectorAll('.act').forEach(b=>{b.disabled=busy||S.over||(b.dataset.a==='collab'&&S.subs<300)});
+  $('#collabLock').style.display=S.subs>=300?'none':''}
+function render(){if(!S)return;
+  $('#day').textContent=Math.min(S.day,100);
+  $('#hpT').textContent=S.hp;$('#hpB').style.width=S.hp+'%';
+  $('#mnT').textContent=S.mental;$('#mnB').style.width=S.mental+'%';
+  $('#moneyT').textContent=won(S.money);$('#moneyT').style.color=S.money<0?'var(--red)':'';
+  $('#subsT').innerHTML=fmt(S.subs)+'<small>명</small>';
+  [['G','game'],['S','sing'],['T','talk']].forEach(([a,k])=>{$('#sk'+a).textContent=S.skill[k];$('#sk'+a+'B').style.width=S.skill[k]+'%'});
+  $('#vname').textContent=S.name;$('#vsub').textContent='구독자 '+fmt(S.subs)+'명'+(S.flags.agency?' · 기획사 소속':'');
+  $('#dexCnt').textContent=Object.keys(S.seen).length+'/'+ALL_EVENTS.length;
+  const vt=$('#vt');
+  if(!busy){let exp='normal',mo='smile',mood='🙂 보통';
+    if(S.mental<20){exp='sad';mo='frown';mood='😢 우울'}
+    else if(S.hp<25){exp='tired';mo='flat';mood='😵 피곤'}
+    else if(S.mental<45||S.hp<45){exp='tired';mo='smile';mood='😪 지침'}
+    else if(S.mental>=75&&S.hp>=60){exp='happy';mo='smile';mood='😊 좋음'}
+    if(S.buff>1)mood='✨ 최상';
+    vt.dataset.exp=exp;vt.dataset.mouth=mo;$('#mood').textContent=mood}
+  $('#stage').classList.toggle('night',S.day%2===0);
+  setOutfit();setBtns();renderShop();
+  $('#log').innerHTML=S.log.slice(0,40).map(l=>`<div><span>D${l.d}</span>${l.e} ${l.t}</div>`).join('')||'<div style="color:var(--sub)">아직 기록이 없어요. 첫 방송을 켜볼까요?</div>';
+}
+function renderShop(){const el=$('#shop');let h='<h3>🍽️ 소모품 <small>즉시 사용</small></h3>';
+  for(const k in CONSUME){const c=CONSUME[k];h+=`<div class="item"><div class="ic">${c.ic}</div><div class="info"><div class="nm">${c.name}</div><div class="ds">${c.ds}</div></div><button class="buy" data-c="${k}" ${S.money<c.price||busy?'disabled':''}>${won(c.price)}</button></div>`}
+  h+='<h3 style="margin-top:8px">🛠️ 방송 장비 <small>영구 효과</small></h3>';
+  for(const k in EQUIP){const c=EQUIP[k],o=S.equip[k];h+=`<div class="item"><div class="ic">${c.ic}</div><div class="info"><div class="nm">${c.name}</div><div class="ds">${c.ds}</div></div><button class="buy ${o?'owned':''}" data-e="${k}" ${o||S.money<c.price?'disabled':''}>${o?'보유 중':won(c.price)}</button></div>`}
+  h+='<h3 style="margin-top:8px">👗 의상 <small>새 의상: 시청자 +5%</small></h3>';
+  for(const k in OUTFITS){const c=OUTFITS[k],o=S.owned[k],on=S.outfit===k;
+    h+=`<div class="item"><div class="ic">${c.ic}</div><div class="info"><div class="nm">${c.name}</div><div class="ds"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${c.c[0]};border:1px solid #ddd;vertical-align:middle"></span> <span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${c.c[2]};vertical-align:middle"></span></div></div><button class="buy ${on?'owned':''}" data-o="${k}" ${on||(!o&&S.money<c.price)?'disabled':''}>${on?'착용 중':o?'입기':won(c.price)}</button></div>`}
+  el.innerHTML=h}
+$('#shop').addEventListener('click',e=>{const b=e.target.closest('.buy');if(!b||b.disabled||busy)return;
+  if(b.dataset.c){const c=CONSUME[b.dataset.c];S.money-=c.price;const d=apply(c.fx);addLog(c.ic,c.name+' 구매');
+    Q.push({e:c.ic,t:c.name,text:c.days?'따끈한 온천에서 이틀간 푹 쉬었어요.':'냠냠! 기운이 났어요.',d:{...d,money:-c.price}});if(c.days)nextDay(c.days);next()}
+  else if(b.dataset.e){const c=EQUIP[b.dataset.e];S.money-=c.price;S.equip[b.dataset.e]=1;addLog(c.ic,c.name+' 구매');
+    Q.push({e:c.ic,t:c.name+' 장착!',text:c.ds,d:{money:-c.price}});next()}
+  else if(b.dataset.o){const k=b.dataset.o,c=OUTFITS[k];
+    if(!S.owned[k]){S.money-=c.price;S.owned[k]=1;S.outfit=k;S.buff=Math.max(S.buff,1.3);const d=apply({mental:15});addLog(c.ic,c.name+' 공개!');
+      Q.push({e:c.ic,t:'신의상 공개!',text:`${c.name}을(를) 장만했어요! 다음 방송은 신의상 공개 방송! (시청자 1.3배)`,d:{...d,money:-c.price}});next()}
+    else{S.outfit=k;toast(c.ic+' '+c.name+'(으)로 갈아입었어요');render();save()}}});
+
+document.querySelectorAll('.act').forEach(b=>b.onclick=()=>doAction(b.dataset.a));
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  $('#tab-act').style.display=t.dataset.tab==='act'?'':'none';$('#tab-shop').style.display=t.dataset.tab==='shop'?'':'none'});
+$('#resetBtn').onclick=()=>{if(busy)return;$('#modal').innerHTML=`<div class="em">↺</div><h2>처음부터 다시 할까요?</h2><p>지금까지의 진행 상황이 사라져요.</p><div class="btns"><button class="btn" id="yes">새로 시작</button><button class="btn alt" id="no">취소</button></div>`;
+  $('#ov').classList.add('on');$('#yes').onclick=intro;$('#no').onclick=closeModal};
+$('#dexBtn').onclick=()=>{if(busy)return;const n=Object.keys(S.seen).length;
+  $('#modal').innerHTML=`<div class="em">📖</div><h2>이벤트 도감</h2><p>발견한 이벤트 ${n} / ${ALL_EVENTS.length}\n조건을 맞추면 숨겨진 이벤트가 열려요.</p><div class="dex">${ALL_EVENTS.map(e=>`<div class="${S.seen[e.id]?'':'no'}" title="${S.seen[e.id]?e.t:'???'}">${e.e}</div>`).join('')}</div><div class="btns"><button class="btn" id="cl">닫기</button></div>`;
+  $('#ov').classList.add('on');$('#cl').onclick=closeModal};
+
+function intro(){Q=[];busy=false;
+  $('#modal').innerHTML=`<div class="em">🎀</div><h2>버튜버 키우기</h2><p>100일 동안 방송을 하며 최고의 버튜버로 키워주세요!\n체력과 정신력을 잘 관리하지 않으면 쓰러지거나 번아웃이 올 수 있어요.</p><input id="nm" maxlength="10" placeholder="버튜버 이름 (예: 루미)" value="루미"><div class="btns"><button class="btn" id="go">데뷔하기 ✨</button></div>`;
+  $('#ov').classList.add('on');const go=()=>{const n=($('#nm').value||'루미').trim().slice(0,10)||'루미';S=newState(n);addLog('🎀',`${n} 데뷔!`);S.seen={};closeModal();render();save();toast('🎉 데뷔를 축하해요! 첫 방송을 켜볼까요?')};
+  $('#go').onclick=go;$('#nm').onkeydown=e=>{if(e.key==='Enter')go()};setTimeout(()=>$('#nm').select(),50)}
+
+// stars in window
+(()=>{const w=$('#win');for(let i=0;i<9;i++){const s=document.createElement('i');s.style.left=RI(8,90)+'%';s.style.top=RI(8,85)+'%';w.appendChild(s)}})();
+S=load();
+if(S&&!S.over){render()}else{S=newState('루미');render();intro()}
+</script>
+</body>
+</html>
